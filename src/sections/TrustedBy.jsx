@@ -12,7 +12,7 @@ const TrustedBy = () => {
   ];
 
   return (
-    <section className="py-20 bg-white border-y border-gray-100">
+    <section className="py-20 bg-slate-50/50 border-y border-gray-100">
       <div className="max-w-7xl mx-auto px-6">
         <p className="text-center text-gray-500 font-medium mb-12 uppercase tracking-widest text-sm">
           Trusted by Industry Leaders Worldwide

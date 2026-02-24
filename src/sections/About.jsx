@@ -35,7 +35,7 @@ const StatCounter = ({ value, label, suffix = "" }) => {
 
 const About = () => {
   return (
-    <section id="about" className="py-20 md:py-32 bg-white overflow-hidden">
+    <section id="about" className="py-20 md:py-32 bg-blue-50/20 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 md:px-10 grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center">
         {/* Content Column */}
         <motion.div

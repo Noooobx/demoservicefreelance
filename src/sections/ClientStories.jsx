@@ -36,7 +36,7 @@ const ClientStories = () => {
   }, []);
 
   return (
-    <section className="py-20 md:py-32 bg-gray-50">
+    <section className="py-20 md:py-32 bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 md:px-10 text-center">
         <h2 className="mb-4">Success <span className="text-accent">Stories</span></h2>
         <p className="text-gray-500 mb-12 md:mb-20 max-w-xl mx-auto">
