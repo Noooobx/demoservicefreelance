@@ -1,5 +1,4 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { memo } from 'react';
 import { Code, Smartphone, Settings, Truck, ShieldCheck, Cpu } from 'lucide-react';
 import Card from '../components/Card';
 
@@ -36,7 +35,7 @@ const services = [
   },
 ];
 
-const Services = () => {
+const Services = memo(() => {
   return (
     <section id="services" className="py-20 md:py-32 bg-blue-50/30">
       <div className="max-w-7xl mx-auto px-4 md:px-10">
@@ -68,6 +67,8 @@ const Services = () => {
       </div>
     </section>
   );
-};
+});
+
+Services.displayName = 'Services';
 
 export default Services;

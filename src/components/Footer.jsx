@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { Mail, Phone, MapPin, Twitter, Linkedin, Facebook, Instagram, ChevronDown } from 'lucide-react';
 import { cn } from '../utils/cn';
-import { motion, AnimatePresence } from 'framer-motion';
 
-const FooterAccordion = ({ title, children }) => {
+const FooterAccordion = memo(({ title, children }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -15,25 +14,23 @@ const FooterAccordion = ({ title, children }) => {
         <h4 className="text-sm md:text-lg font-bold text-white uppercase tracking-widest">{title}</h4>
         <ChevronDown size={16} className={cn("text-accent lg:hidden transition-transform", isOpen && "rotate-180")} />
       </button>
-      <AnimatePresence>
-        {(isOpen || window.innerWidth > 1024) && (
-          <motion.div
-            initial={window.innerWidth < 1024 ? { height: 0, opacity: 0 } : false}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden lg:mt-6"
-          >
-            <div className="pb-5 lg:pb-0">
-              {children}
-            </div>
-          </motion.div>
+      <div 
+        className={cn(
+          "overflow-hidden transition-all duration-300 ease-in-out lg:max-h-none lg:opacity-100 lg:mt-6",
+          isOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0 lg:max-h-none lg:opacity-100"
         )}
-      </AnimatePresence>
+      >
+        <div className="pb-5 lg:pb-0">
+          {children}
+        </div>
+      </div>
     </div>
   );
-};
+});
 
-const Footer = () => {
+FooterAccordion.displayName = 'FooterAccordion';
+
+const Footer = memo(() => {
   return (
     <footer className="bg-primary text-white pt-16 md:pt-24 pb-32 md:pb-12 px-4 md:px-10">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-10 md:gap-16 mb-16 md:mb-20">
@@ -108,6 +105,8 @@ const Footer = () => {
       </div>
     </footer>
   );
-};
+});
+
+Footer.displayName = 'Footer';
 
 export default Footer;

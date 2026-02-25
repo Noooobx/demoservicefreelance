@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, memo } from 'react';
 import { Plus, Minus } from 'lucide-react';
 import { cn } from '../utils/cn';
 
-const FAQItem = ({ question, answer }) => {
+const FAQItem = memo(({ question, answer }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -25,25 +24,23 @@ const FAQItem = ({ question, answer }) => {
           {isOpen ? <Minus size={18} /> : <Plus size={18} />}
         </div>
       </button>
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden"
-          >
-            <p className="pb-6 md:pb-8 text-gray-500 leading-relaxed md:text-lg">
-              {answer}
-            </p>
-          </motion.div>
+      <div 
+        className={cn(
+          "overflow-hidden transition-all duration-300 ease-in-out",
+          isOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
         )}
-      </AnimatePresence>
+      >
+        <p className="pb-6 md:pb-8 text-gray-500 leading-relaxed md:text-lg">
+          {answer}
+        </p>
+      </div>
     </div>
   );
-};
+});
 
-const FAQ = () => {
+FAQItem.displayName = 'FAQItem';
+
+const FAQ = memo(() => {
   const faqs = [
     {
       question: "What industries do you specialize in?",
@@ -86,6 +83,8 @@ const FAQ = () => {
       </div>
     </section>
   );
-};
+});
+
+FAQ.displayName = 'FAQ';
 
 export default FAQ;

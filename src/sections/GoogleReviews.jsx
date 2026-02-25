@@ -1,16 +1,19 @@
-import React from 'react';
-import { Star } from 'lucide-react';
-import { motion } from 'framer-motion';
+import React, { memo } from 'react';
+import { Star, ArrowRight } from 'lucide-react';
+import { useIntersection } from '../hooks/useIntersection';
+import { cn } from '../utils/cn';
 
-const GoogleReviews = () => {
+const GoogleReviews = memo(() => {
+  const [ref, isIntersecting] = useIntersection({ once: true, threshold: 0.1 });
+
   return (
-    <section className="py-16 bg-white border-b border-gray-100">
+    <section id="reviews" ref={ref} className="py-16 bg-white border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-6 flex flex-col items-center text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="bg-accent/5 p-12 rounded-[40px] border border-accent/10 relative overflow-hidden group"
+        <div
+          className={cn(
+            "bg-accent/5 p-12 rounded-[40px] border border-accent/10 relative overflow-hidden group transition-all duration-300 reveal",
+            isIntersecting && "reveal-active"
+          )}
         >
           {/* Subtle background glow */}
           <div className="absolute inset-0 bg-accent/10 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
@@ -39,12 +42,12 @@ const GoogleReviews = () => {
               </a>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
-};
+});
 
-import { ArrowRight } from 'lucide-react';
+GoogleReviews.displayName = 'GoogleReviews';
 
 export default GoogleReviews;

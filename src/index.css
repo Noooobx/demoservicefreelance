@@ -26,10 +26,31 @@
   p { @apply text-base md:text-lg lg:text-xl; }
 }
 
+/* Lightweight Keyframes for GPU Animations */
+@keyframes float {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(10px, -20px); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes bounce-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
+}
+
 @layer components {
   .section-padding {
     @apply px-4 md:px-10 lg:px-20 py-16 md:py-24;
   }
+
+  .animate-float-slow { animation: float 15s ease-in-out infinite; }
+  .animate-float-slower { animation: float 22s ease-in-out infinite reverse; }
+  .animate-spin-slow { animation: spin-slow 40s linear infinite; }
+  .animate-bounce-slow { animation: bounce-slow 6s ease-in-out infinite; }
 
   .glass-navbar {
     @apply fixed top-0 z-50 w-full bg-white/70 backdrop-blur-md border-b border-white/20 transition-all duration-300;

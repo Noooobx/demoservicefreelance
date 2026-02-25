@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect, memo } from 'react';
 import { Quote, Star } from 'lucide-react';
 import Card from '../components/Card';
+import { cn } from '../utils/cn';
 
 const testimonials = [
   {
@@ -24,7 +24,7 @@ const testimonials = [
   }
 ];
 
-const ClientStories = () => {
+const ClientStories = memo(() => {
   const [activeIndex, setActiveIndex] = useState(0);
 
   // Auto-slide on mobile
@@ -64,37 +64,40 @@ const ClientStories = () => {
           ))}
         </div>
 
-        {/* Mobile Swipe Simulation / Navigation */}
-        <div className="md:hidden relative">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeIndex}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="px-2"
+        {/* Mobile Slide Logic (Pure CSS) */}
+        <div className="md:hidden relative h-[380px]">
+          {testimonials.map((testimonial, idx) => (
+            <div
+              key={idx}
+              className={cn(
+                "absolute inset-0 px-2 transition-all duration-500 ease-in-out",
+                idx === activeIndex ? "opacity-100 translate-x-0" : idx < activeIndex ? "opacity-0 -translate-x-full" : "opacity-0 translate-x-full"
+              )}
             >
-              <Card className="text-left border-2 border-accent/5">
+              <Card className="text-left border-2 border-accent/5 h-full">
                 <Quote className="text-accent/20 mb-4" size={32} />
-                <p className="text-gray-600 italic mb-6 leading-relaxed">"{testimonials[activeIndex].text}"</p>
+                <p className="text-gray-600 italic mb-6 leading-relaxed">"{testimonial.text}"</p>
                 <div className="flex gap-1 mb-4">
-                  {[...Array(testimonials[activeIndex].stars)].map((_, i) => (
+                  {[...Array(testimonial.stars)].map((_, i) => (
                     <Star key={i} size={14} className="fill-accent text-accent" />
                   ))}
                 </div>
-                <div className="font-bold text-primary">{testimonials[activeIndex].name}</div>
-                <div className="text-xs text-gray-400 uppercase tracking-widest mt-1">{testimonials[activeIndex].role}</div>
+                <div className="font-bold text-primary">{testimonial.name}</div>
+                <div className="text-xs text-gray-400 uppercase tracking-widest mt-1">{testimonial.role}</div>
               </Card>
-            </motion.div>
-          </AnimatePresence>
+            </div>
+          ))}
 
           {/* Dots Indicator */}
-          <div className="flex justify-center gap-2 mt-8">
+          <div className="absolute -bottom-12 left-0 right-0 flex justify-center gap-2">
             {testimonials.map((_, i) => (
               <button
                 key={i}
                 onClick={() => setActiveIndex(i)}
-                className={`h-2 transition-all duration-300 rounded-full ${i === activeIndex ? 'w-8 bg-accent' : 'w-2 bg-accent/20'}`}
+                className={cn(
+                  "h-2 transition-all duration-300 rounded-full",
+                  i === activeIndex ? "w-8 bg-accent" : "w-2 bg-accent/20"
+                )}
               />
             ))}
           </div>
@@ -102,6 +105,8 @@ const ClientStories = () => {
       </div>
     </section>
   );
-};
+});
+
+ClientStories.displayName = 'ClientStories';
 
 export default ClientStories;

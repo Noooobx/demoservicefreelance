@@ -1,11 +1,14 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { memo } from 'react';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
 import Card from '../components/Card';
+import { useIntersection } from '../hooks/useIntersection';
+import { cn } from '../utils/cn';
 
-const Contact = () => {
+const Contact = memo(() => {
+  const [ref, isIntersecting] = useIntersection({ once: true, threshold: 0.1 });
+
   return (
-    <section id="contact" className="py-20 md:py-32 bg-gray-50">
+    <section id="contact" ref={ref} className="py-20 md:py-32 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 md:px-10">
         <div className="text-center mb-12 md:mb-20">
           <h2 className="mb-4">Let’s <span className="text-accent">Connect</span></h2>
@@ -16,10 +19,8 @@ const Contact = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16">
           {/* Form Column */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+          <div
+            className={cn("reveal", isIntersecting && "reveal-active")}
           >
             <Card className="p-6 md:p-10">
               <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
@@ -52,7 +53,7 @@ const Contact = () => {
                 </button>
               </form>
             </Card>
-          </motion.div>
+          </div>
 
           {/* Info Column */}
           <div className="flex flex-col justify-between py-4">
@@ -101,6 +102,8 @@ const Contact = () => {
       </div>
     </section>
   );
-};
+});
+
+Contact.displayName = 'Contact';
 
 export default Contact;

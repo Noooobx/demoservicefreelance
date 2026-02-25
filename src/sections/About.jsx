@@ -1,16 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useEffect, useState, memo } from 'react';
+import { useIntersection } from '../hooks/useIntersection';
+import { cn } from '../utils/cn';
 
-const StatCounter = ({ value, label, suffix = "" }) => {
+const StatCounter = memo(({ value, label, suffix = "" }) => {
   const [count, setCount] = useState(0);
+  const [ref, isIntersecting] = useIntersection({ once: true, threshold: 0.1 });
   
   useEffect(() => {
+    if (!isIntersecting) return;
+    
     let start = 0;
     const end = parseInt(value);
     if (isNaN(end)) return;
     
     const duration = 2000;
-    const increment = end / (duration / 16); // 60fps approx
+    const increment = end / (duration / 16);
 
     const timer = setInterval(() => {
       start += increment;
@@ -23,27 +27,26 @@ const StatCounter = ({ value, label, suffix = "" }) => {
     }, 16);
 
     return () => clearInterval(timer);
-  }, [value]);
+  }, [value, isIntersecting]);
 
   return (
-    <div className="flex flex-col items-center p-6 md:p-8 bg-white rounded-3xl shadow-sm border border-gray-50 active:scale-95 transition-all">
+    <div ref={ref} className="flex flex-col items-center p-6 md:p-8 bg-white rounded-3xl shadow-sm border border-gray-50 active:scale-95 transition-all">
       <span className="text-3xl md:text-4xl font-black text-accent mb-2">{count}{suffix}</span>
       <span className="text-gray-400 font-bold text-[10px] md:text-sm text-center uppercase tracking-[0.2em]">{label}</span>
     </div>
   );
-};
+});
 
-const About = () => {
+StatCounter.displayName = 'StatCounter';
+
+const About = memo(() => {
+  const [ref, isIntersecting] = useIntersection({ once: true, threshold: 0.1 });
+
   return (
-    <section id="about" className="py-20 md:py-32 bg-blue-50/20 overflow-hidden">
+    <section id="about" ref={ref} className="py-20 md:py-32 bg-blue-50/20 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 md:px-10 grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center">
         {/* Content Column */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          className="text-center lg:text-left"
-        >
+        <div className={cn("text-center lg:text-left reveal", isIntersecting && "reveal-active")}>
           <span className="text-accent font-black uppercase tracking-[0.3em] text-[10px] md:text-xs mb-4 block">Our Story</span>
           <h2 className="text-primary mb-8 md:mb-10 leading-tight">
             Transcend Digital <br className="hidden md:block" /> <span className="text-accent underline decoration-accent/20 underline-offset-8">Boundaries</span>
@@ -67,7 +70,7 @@ const About = () => {
               <span className="font-bold text-[10px] tracking-[0.2em] uppercase opacity-60">TechFlow Vision</span>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Stats Column */}
         <div className="grid grid-cols-2 gap-4 md:gap-6">
@@ -77,23 +80,19 @@ const About = () => {
             { v: "24", l: "Uptime", s: "/7" },
             { v: "100", l: "SLA", s: "%" }
           ].map((stat, i) => (
-            <motion.div
+            <div
                 key={i}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className={cn(i % 2 !== 0 ? "md:pt-12" : "")}
+                className={cn("reveal delay-100", isIntersecting && "reveal-active", i % 2 !== 0 ? "md:pt-12" : "")}
             >
                 <StatCounter value={stat.v} label={stat.l} suffix={stat.s} />
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
     </section>
   );
-};
+});
 
-import { cn } from '../utils/cn';
+About.displayName = 'About';
 
 export default About;
